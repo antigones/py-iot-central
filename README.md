@@ -23,14 +23,15 @@ Example usage:
         # auth_type="Bearer",
         token=SAS_TOKEN)
 
+    # get template for device
     devices_response = iotc.list_devices()
 
     devices = devices_response.value
     print('devices')
     print(devices)
 
-
-    template_for_device = iotc.get_template(<dtmi>)
+    # get commands from device template
+    template_for_device = iotc.get_template(<template_dtmi>)
     print('template')
     print(template_for_device)
     template_commands = template_for_device.get_commands()
