@@ -27,10 +27,10 @@ class IOTCentral:
             complete_device = Device(
                 name=device.id, 
                 display_name=device.displayName,
-                commands=self.filter_objects_by_type(Command, device_template.capabilityModel.contents),
-                telemetries=self.filter_objects_by_type(Telemetry, device_template.capabilityModel.contents),
-                cloud_properties=self.filter_objects_by_type(CloudProperty, device_template.capabilityModel.contents),
-                properties=self.filter_objects_by_type(Property, device_template.capabilityModel.contents))
+                commands=self._filter_objects_by_type(Command, device_template.capabilityModel.contents),
+                telemetries=self._filter_objects_by_type(Telemetry, device_template.capabilityModel.contents),
+                cloud_properties=self._filter_objects_by_type(CloudProperty, device_template.capabilityModel.contents),
+                properties=self._filter_objects_by_type(Property, device_template.capabilityModel.contents))
             complete_devices.append(complete_device)
         return complete_devices
 
@@ -38,5 +38,5 @@ class IOTCentral:
         self.IOTCentralAPIService.send_command(device=device, command=command)
 
 
-    def filter_objects_by_type(self, typeName: type, l: list) -> list[type]:
+    def _filter_objects_by_type(self, typeName: type, l: list) -> list[type]:
         return [x for x in l if isinstance(x, typeName)]

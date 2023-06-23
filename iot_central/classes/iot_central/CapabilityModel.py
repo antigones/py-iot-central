@@ -32,5 +32,7 @@ class CapabilityModel:
                     item = Telemetry.from_dict(content)
                 if 'Cloud' in content['@type']:
                     item = CloudProperty.from_dict(content)
+                if 'Property' in content['@type']:
+                    item = Property.from_dict(content)
             tmp.append(item)
         self.contents = tmp
