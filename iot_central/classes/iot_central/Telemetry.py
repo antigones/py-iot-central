@@ -5,11 +5,12 @@ from dataclasses_json import config, dataclass_json
 
 @dataclass_json
 @dataclass
-class Command:
+class Telemetry:
     id: Optional[str] = field(metadata=config(field_name="@id"))
-    type: str=field(metadata=config(field_name="@type"))
+    type: list[str]=field(metadata=config(field_name="@type"))
     name:str
-    description:Optional[str] = None
-    displayName:Optional[str] = None
-    commandType:Optional[str] = None
-    comment:Optional[str] = None
+
+    comment: Optional[str] = None
+    description: Optional[str] = None
+    displayName: Optional[str] = None
+    

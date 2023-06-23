@@ -1,10 +1,10 @@
 import datetime
-import requests
-from iot_central.classes.DeviceTemplate import DeviceTemplate
-
-from iot_central.classes.ListDevicesResponse import ListDevicesResponse
-
-
+from iot_central.Device import Device
+from iot_central.IOTCentralAPIService import IOTCentralAPIService
+from iot_central.classes.iot_central.CloudProperty import CloudProperty
+from iot_central.classes.iot_central.Command import Command
+from iot_central.classes.iot_central.Property import Property
+from iot_central.classes.iot_central.Telemetry import Telemetry
 
 class IOTCentral:
 
@@ -13,31 +13,30 @@ class IOTCentral:
         self.auth_type = auth_type
         self.token = token
         self.api_version = api_version
-        self.headers = self.build_headers()
-
-    def build_headers(self):
-        return {
-            "Authorization":f"{self.auth_type} {self.token}"
-        }
+        self.IOTCentralAPIService = IOTCentralAPIService(
+            app_subdomain=self.app_subdomain, 
+            auth_type=self.auth_type,
+            token=self.token,
+            api_version=self.api_version)
     
-    def list_devices(self):
-        url = f"https://{self.app_subdomain}/api/devices?api-version={self.api_version}"
-        response = requests.get(url, headers=self.headers)
-        devices = ListDevicesResponse.from_json(response.text)
-        return devices
-    
-    def get_template(self, device_template_id):
-        url = f"https://{self.app_subdomain}/api/deviceTemplates/{device_template_id}?api-version={self.api_version}"
-        response = requests.get(url, headers=self.headers)
-        device_template = DeviceTemplate.from_json(response.text)
-        return device_template
+    def get_devices(self) -> list[Device]:
+        complete_devices = list()
+        devices = self.IOTCentralAPIService.get_devices()
+        for device in devices.value:
+            device_template = self.IOTCentralAPIService.get_template(device.template)
+            complete_device = Device(
+                name=device.id, 
+                display_name=device.displayName,
+                commands=self.filter_objects_by_type(Command, device_template.capabilityModel.contents),
+                telemetries=self.filter_objects_by_type(Telemetry, device_template.capabilityModel.contents),
+                cloud_properties=self.filter_objects_by_type(CloudProperty, device_template.capabilityModel.contents),
+                properties=self.filter_objects_by_type(Property, device_template.capabilityModel.contents))
+            complete_devices.append(complete_device)
+        return complete_devices
 
     def send_command(self, device, command):
+        self.IOTCentralAPIService.send_command(device=device, command=command)
 
-        payload = {
-            "request": datetime.datetime.utcnow().isoformat()
-        }
 
-        url = f"https://{self.app_subdomain}/api/devices/{device}/commands/{command}?api-version={self.api_version}"
-        response = requests.post(url, headers=self.headers, json=payload, verify=False)
-        return response
+    def filter_objects_by_type(self, typeName: type, l: list) -> list[type]:
+        return [x for x in l if isinstance(x, typeName)]
