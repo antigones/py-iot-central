@@ -18,25 +18,20 @@ Example usage:
     BEARER_TOKEN = os.getenv('BEARER_TOKEN')
 
     iotc = IOTCentral(
-        app_subdomain=APP_SUBDOMAIN,
-        auth_type="SharedAccessSignature",
-        # auth_type="Bearer",
-        token=SAS_TOKEN)
+    app_subdomain=APP_SUBDOMAIN,
+    auth_type=AuthType.SAS_TOKEN.value, 
+    token=SAS_TOKEN
+    )
 
-    # get template for device
-    devices_response = iotc.list_devices()
-
-    devices = devices_response.value
-    print('devices')
+    devices: list[Device] = iotc.get_devices()
     print(devices)
 
-    # get commands from device template
-    template_for_device = iotc.get_template(<template_dtmi>)
-    print('template')
-    print(template_for_device)
-    template_commands = template_for_device.get_commands()
-    print('commands')
-    command_list = list(template_commands)
+    for device in devices:
+        print(device)
+        print(device.commands)
+        print(device.telemetries)
+        print(device.cloud_properties)
+        print(device.properties)
     
     ...
     
