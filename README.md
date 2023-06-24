@@ -18,9 +18,9 @@ Example usage:
     BEARER_TOKEN = os.getenv('BEARER_TOKEN')
 
     iotc = IOTCentral(
-    app_subdomain=APP_SUBDOMAIN,
-    auth_type=AuthType.SAS_TOKEN.value, 
-    token=SAS_TOKEN
+        app_subdomain=APP_SUBDOMAIN,
+        auth_type=AuthType.SAS_TOKEN, 
+        token=SAS_TOKEN
     )
 
     devices: list[Device] = iotc.get_devices()
