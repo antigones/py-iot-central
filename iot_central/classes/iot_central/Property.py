@@ -12,3 +12,4 @@ class Property:
     description: Optional[str] = None
     displayName: Optional[str] = None
     schema: Optional[str] = None
+    color: Optional[str] = None
