@@ -1,6 +1,6 @@
 # py-iot-central
 
-A small wrapper for IOTCentral API REST
+A small wrapper for IOTCentral REST API
 
 
 Example usage:
@@ -35,6 +35,6 @@ Example usage:
     
     ...
     
-    res = iotc.send_command(device_name, <command_name>)
+    res = iotc.send_command(device_id, <command_name>)
     print(res)
     
