@@ -23,6 +23,7 @@ Example usage:
         token=SAS_TOKEN
     )
 
+    # listing devices and properties/commands/telemetries/cloud properties
     devices: list[Device] = iotc.get_devices()
     print(devices)
 
@@ -35,6 +36,13 @@ Example usage:
     
     ...
     
-    res = iotc.send_command(device_id, <command_name>)
+    # sending a command
+    res = iotc.send_command(<device_id>, <command_name>)
+    print(res)
+
+    # updating a property
+    humidity_obj = {'HumidityPercentage':random.randint(20,60)}
+    payload = json.dumps(humidity_obj)
+    res = iotc.update_property(<device_id>, humidity_obj)
     print(res)
     
