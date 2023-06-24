@@ -35,8 +35,10 @@ class IOTCentral:
         return complete_devices
 
     def send_command(self, device, command):
-        self.IOTCentralAPIService.send_command(device=device, command=command)
+        return self.IOTCentralAPIService.send_command(device=device, command=command)
 
+    def update_property(self, device_name, payload:str):
+        return self.IOTCentralAPIService.update_property(device=device_name, payload=payload)
 
     def _filter_objects_by_type(self, typeName: type, l: list) -> list[type]:
         return [x for x in l if isinstance(x, typeName)]

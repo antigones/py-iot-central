@@ -1,5 +1,6 @@
 import datetime
 import requests
+from iot_central.classes.AuthType import AuthType
 from iot_central.classes.iot_central.Device import Device
 from iot_central.classes.iot_central.DeviceTemplate import DeviceTemplate
 from iot_central.classes.iot_central.ListDevicesResponse import ListDevicesResponse
@@ -8,19 +9,25 @@ from iot_central.classes.iot_central.ListDevicesResponse import ListDevicesRespo
 
 class IOTCentralAPIService:
 
-    def __init__(self, app_subdomain, auth_type, token, api_version="2022-07-31"):
+    def __init__(self, app_subdomain:str, auth_type:AuthType, token:str, api_version="2022-07-31"):
         self.app_subdomain = app_subdomain
         self.auth_type = auth_type
         self.token = token
         self.api_version = api_version
-        self.headers = self.build_headers()
+        self.headers = self.build_headers(auth_type=self.auth_type)
 
-    def build_headers(self):
-        return {
-            "Authorization":f"{self.auth_type} {self.token}"
-        }
-    
-    def get_devices(self)->list[Device]:
+    def build_headers(self, auth_type: AuthType) -> dict:
+        match auth_type:
+            case AuthType.SAS_TOKEN:
+                return {
+                    "Authorization":f"{self.token}"
+                }
+            case AuthType.BEARER:
+                return {
+                    "Bearer":f"{self.token}"
+                }
+            
+    def get_devices(self) -> list[Device]:
         url = f"https://{self.app_subdomain}/api/devices?api-version={self.api_version}"
         response = requests.get(url, headers=self.headers)
         devices_res = ListDevicesResponse.from_json(response.text)
@@ -31,8 +38,13 @@ class IOTCentralAPIService:
         response = requests.get(url, headers=self.headers)
         device_template = DeviceTemplate.from_json(response.text)
         return device_template
+    
+    def update_property(self, device, payload: str) -> requests.Response:
+        url = f"https://{self.app_subdomain}/api/devices/{device}/properties?api-version={self.api_version}"
+        response = requests.patch(url, headers=self.headers, json=payload)
+        return response
 
-    def send_command(self, device, command):
+    def send_command(self, device, command) -> requests.Response:
         payload = {
             "request": datetime.datetime.utcnow().isoformat()
         }
