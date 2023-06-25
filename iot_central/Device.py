@@ -1,11 +1,14 @@
-from iot_central.IOTCentralAPIService import IOTCentralAPIService
-from iot_central.classes.iot_central.CloudProperty import CloudProperty
-from iot_central.classes.iot_central.Command import Command
-from iot_central.classes.iot_central.Telemetry import Telemetry
+
+
+from iot_central.classes.iot_central.property import Property
+from iot_central.classes.iot_central.cloud_property import CloudProperty
+from iot_central.classes.iot_central.telemetry import Telemetry
+from iot_central.classes.iot_central.command import Command
+
 
 class Device:
 
-    def __init__(self, name:str, display_name:str, commands:list[Command], telemetries:list[Telemetry], properties, cloud_properties:list[CloudProperty]):
+    def __init__(self, name:str, display_name:str, commands:list[Command], telemetries:list[Telemetry], properties: list[Property], cloud_properties:list[CloudProperty]):
         self.name = name
         self.display_name = display_name
         self.commands = commands

@@ -1,9 +1,9 @@
 import datetime
 import requests
-from iot_central.classes.AuthType import AuthType
-from iot_central.classes.iot_central.Device import Device
-from iot_central.classes.iot_central.DeviceTemplate import DeviceTemplate
-from iot_central.classes.iot_central.ListDevicesResponse import ListDevicesResponse
+from iot_central.classes.authtype import AuthType
+from iot_central.classes.iot_central.device import Device
+from iot_central.classes.iot_central.device_template import DeviceTemplate
+from iot_central.classes.iot_central.list_devices_response import ListDevicesResponse
 
 
 
@@ -26,19 +26,19 @@ class IOTCentralAPIService:
                 return {
                     "Bearer":f"{self.token}"
                 }
-            
+
     def get_devices(self) -> list[Device]:
         url = f"https://{self.app_subdomain}/api/devices?api-version={self.api_version}"
         response = requests.get(url, headers=self.headers)
-        devices_res = ListDevicesResponse.from_json(response.text)
+        devices_res = ListDevicesResponse.from_json(response.text) # pylint: disable=E1101
         return devices_res
-    
+
     def get_template(self, device_template_id) -> DeviceTemplate:
         url = f"https://{self.app_subdomain}/api/deviceTemplates/{device_template_id}?api-version={self.api_version}"
         response = requests.get(url, headers=self.headers)
-        device_template = DeviceTemplate.from_json(response.text)
+        device_template = DeviceTemplate.from_json(response.text) # pylint: disable=E1101
         return device_template
-    
+
     def update_property(self, device, payload: str) -> requests.Response:
         url = f"https://{self.app_subdomain}/api/devices/{device}/properties?api-version={self.api_version}"
         response = requests.patch(url, headers=self.headers, json=payload)

@@ -1,10 +1,10 @@
-import datetime
-from iot_central.Device import Device
-from iot_central.IOTCentralAPIService import IOTCentralAPIService
-from iot_central.classes.iot_central.CloudProperty import CloudProperty
-from iot_central.classes.iot_central.Command import Command
-from iot_central.classes.iot_central.Property import Property
-from iot_central.classes.iot_central.Telemetry import Telemetry
+from iot_central.device import Device
+
+from iot_central.classes.iot_central.cloud_property import CloudProperty
+from iot_central.classes.iot_central.command import Command
+from iot_central.classes.iot_central.property import Property
+from iot_central.classes.iot_central.telemetry import Telemetry
+from iot_central.iotcentral_api_service import IOTCentralAPIService
 
 class IOTCentral:
 
