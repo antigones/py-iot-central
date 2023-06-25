@@ -1,6 +1,7 @@
 import datetime
 import requests
-from iot_central.classes.authtype import AuthType
+from iot_central.classes.auth_type import AuthType
+
 from iot_central.classes.iot_central.device import Device
 from iot_central.classes.iot_central.device_template import DeviceTemplate
 from iot_central.classes.iot_central.list_devices_response import ListDevicesResponse
