@@ -1,0 +1,3 @@
+
+class IOTCentralError(BaseException):
+    pass

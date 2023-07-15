@@ -1,3 +1,5 @@
+from iot_central.classes.iot_central.iot_central_error import IOTCentralError
+from iot_central.classes.iot_central.iotcentral_api_error_response import IOTCentralApiErrorResponse
 from iot_central.device import Device
 
 from iot_central.classes.iot_central.cloud_property import CloudProperty
@@ -22,8 +24,12 @@ class IOTCentral:
     def get_devices(self) -> list[Device]:
         complete_devices = list()
         devices = self.IOTCentralAPIService.get_devices()
+        if isinstance(devices, IOTCentralApiErrorResponse):
+            raise IOTCentralError()
         for device in devices.value:
             device_template = self.IOTCentralAPIService.get_template(device.template)
+            if isinstance(device_template, IOTCentralApiErrorResponse):
+                raise IOTCentralError()
             complete_device = Device(
                 name=device.id, 
                 display_name=device.displayName,
@@ -34,11 +40,15 @@ class IOTCentral:
             complete_devices.append(complete_device)
         return complete_devices
 
+    
+
     def send_command(self, device, command):
         return self.IOTCentralAPIService.send_command(device=device, command=command)
+    
 
     def update_property(self, device_name, payload:str):
         return self.IOTCentralAPIService.update_property(device=device_name, payload=payload)
 
-    def _filter_objects_by_type(self, typeName: type, l: list) -> list[type]:
-        return [x for x in l if isinstance(x, typeName)]
+
+    def _filter_objects_by_type(self, typeName: type, iot_objs_list: list) -> list[type]:
+        return [x for x in iot_objs_list if isinstance(x, typeName)]
