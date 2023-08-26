@@ -36,6 +36,9 @@ Example usage:
     
     ...
     
+    # getting telemetry (property: 'temperature')
+    res = iotc.get_telemetry(<device_id>,'temperature')
+
     # sending a command
     res = iotc.send_command(<device_id>, <command_name>)
     print(res)
