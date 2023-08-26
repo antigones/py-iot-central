@@ -48,6 +48,9 @@ class IOTCentral:
 
     def update_property(self, device_name, payload:str):
         return self.IOTCentralAPIService.update_property(device=device_name, payload=payload)
+    
+    def get_telemetry(self, device_name, property):
+        return self.IOTCentralAPIService.get_telemetry(device=device_name, property=property)
 
 
     def _filter_objects_by_type(self, typeName: type, iot_objs_list: list) -> list[type]:

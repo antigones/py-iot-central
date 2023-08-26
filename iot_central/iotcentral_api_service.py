@@ -5,10 +5,12 @@ from iot_central.classes.auth_type import AuthType
 
 from iot_central.classes.iot_central.device import Device
 from iot_central.classes.iot_central.device_template import DeviceTemplate
+from iot_central.classes.iot_central.get_telemetry_response import GetTelemetryResponse
 from iot_central.classes.iot_central.iot_central_error import IOTCentralError
 from iot_central.classes.iot_central.iotcentral_api_error_response import IOTCentralApiErrorResponse
 from iot_central.classes.iot_central.list_devices_response import ListDevicesResponse
 from iot_central.classes.iot_central.send_command_response import SendCommandResponse
+from iot_central.classes.iot_central.telemetry import Telemetry
 
 
 
@@ -67,6 +69,17 @@ class IOTCentralAPIService:
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
             res = SendCommandResponse.from_json(response.text)
+        else:
+            res = IOTCentralApiErrorResponse.from_json(response.text)
+        return res
+    
+    
+    def get_telemetry(self, device, property) -> Telemetry | IOTCentralApiErrorResponse:
+        
+        url = f"https://{self.app_subdomain}/api/devices/{device}/telemetry/{property}?api-version={self.api_version}"
+        response = requests.get(url, headers=self.headers)
+        if response.status_code == 200:
+            res = GetTelemetryResponse.from_json(response.text)
         else:
             res = IOTCentralApiErrorResponse.from_json(response.text)
         return res
