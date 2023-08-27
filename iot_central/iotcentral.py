@@ -1,12 +1,26 @@
-from iot_central.classes.iot_central.iot_central_error import IOTCentralError
-from iot_central.classes.iot_central.iotcentral_api_error_response import IOTCentralApiErrorResponse
-from iot_central.complete_device import CompleteDevice
+from iot_central.iot_central_error import IOTCentralError
+from iot_central.iotc_objects import Command, Telemetry, CloudProperty, Property
+from iot_central.responses import IOTCentralApiErrorResponse
 
-from iot_central.classes.iot_central.cloud_property import CloudProperty
-from iot_central.classes.iot_central.command import Command
-from iot_central.classes.iot_central.property import Property
-from iot_central.classes.iot_central.telemetry import Telemetry
 from iot_central.iotcentral_api_service import IOTCentralAPIService
+
+
+class CompleteDevice:
+
+    def __init__(self, name:str, display_name:str, commands:list[Command], telemetries:list[Telemetry], properties: list[Property], cloud_properties:list[CloudProperty]):
+        self.name = name
+        self.display_name = display_name
+        self.commands = commands
+        self.telemetries = telemetries
+        self.properties = properties
+        self.cloud_properties = cloud_properties
+    
+    def __str__(self) -> str:
+        return self.name
+    
+    def __repr__(self) -> str:
+        return self.name
+
 
 class IOTCentral:
 
@@ -55,3 +69,4 @@ class IOTCentral:
 
     def _filter_objects_by_type(self, typeName: type, iot_objs_list: list) -> list[type]:
         return [x for x in iot_objs_list if isinstance(x, typeName)]
+

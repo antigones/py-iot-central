@@ -1,17 +1,9 @@
 import datetime
 import requests
+from iot_central.auth_type import AuthType
 
-from iot_central.classes.auth_type import AuthType
-
-from iot_central.classes.iot_central.device import Device
-from iot_central.classes.iot_central.device_template import DeviceTemplate
-from iot_central.classes.iot_central.get_telemetry_response import GetTelemetryResponse
-from iot_central.classes.iot_central.iot_central_error import IOTCentralError
-from iot_central.classes.iot_central.iotcentral_api_error_response import IOTCentralApiErrorResponse
-from iot_central.classes.iot_central.list_devices_response import ListDevicesResponse
-from iot_central.classes.iot_central.send_command_response import SendCommandResponse
-from iot_central.classes.iot_central.telemetry import Telemetry
-
+from iot_central.iotc_objects import Device, DeviceTemplate
+from iot_central.responses import GetTelemetryResponse, IOTCentralApiErrorResponse, ListDevicesResponse, SendCommandResponse
 
 
 class IOTCentralAPIService:
@@ -74,7 +66,7 @@ class IOTCentralAPIService:
         return res
     
     
-    def get_telemetry(self, device, property) -> Telemetry | IOTCentralApiErrorResponse:
+    def get_telemetry(self, device, property) -> GetTelemetryResponse | IOTCentralApiErrorResponse:
         
         url = f"https://{self.app_subdomain}/api/devices/{device}/telemetry/{property}?api-version={self.api_version}"
         response = requests.get(url, headers=self.headers)
@@ -83,3 +75,4 @@ class IOTCentralAPIService:
         else:
             res = IOTCentralApiErrorResponse.from_json(response.text)
         return res
+    
