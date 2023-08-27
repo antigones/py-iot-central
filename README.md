@@ -9,7 +9,8 @@ Example usage:
 
     from dotenv import load_dotenv
 
-    from iot_central.IOTCentral import IOTCentral
+    from iot_central.iotc_objects import AuthType
+    from iot_central.iotcentral import CompleteDevice, IOTCentral, IOTCentralError
 
     load_dotenv()
 
@@ -24,7 +25,7 @@ Example usage:
     )
 
     # listing devices and properties/commands/telemetries/cloud properties
-    devices: list[Device] = iotc.get_devices()
+    devices: list[CompleteDevice] = iotc.get_devices()
     print(devices)
 
     for device in devices:
@@ -38,7 +39,8 @@ Example usage:
     
     # getting telemetry (property: 'temperature')
     res = iotc.get_telemetry(<device_id>,'temperature')
-
+    print(res)
+    
     # sending a command
     res = iotc.send_command(<device_id>, <command_name>)
     print(res)
