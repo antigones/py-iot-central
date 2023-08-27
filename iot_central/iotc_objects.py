@@ -3,14 +3,14 @@ from enum import Enum
 from typing import Optional
 from dataclasses_json import config, dataclass_json
 
-
+def json_response(cl):
+    return dataclass_json(dataclass(cl))
 
 class AuthType(Enum):
     BEARER = 'Bearer'
     SAS_TOKEN = 'SharedAccessSignature'
 
-@dataclass_json
-@dataclass
+@json_response
 class Device:
     id: str
     etag: str
@@ -20,8 +20,7 @@ class Device:
     template: str
     enabled: bool
 
-@dataclass_json
-@dataclass
+@json_response
 class Command:
     id: Optional[str] = field(metadata=config(field_name="@id"))
     type: str=field(metadata=config(field_name="@type"))
@@ -31,8 +30,7 @@ class Command:
     commandType: Optional[str] = None
     comment: Optional[str] = None
 
-@dataclass_json
-@dataclass
+@json_response
 class CloudProperty:
     id: Optional[str] = field(metadata=config(field_name="@id"))
     type: str = field(metadata=config(field_name="@type"))
@@ -41,8 +39,7 @@ class CloudProperty:
     displayName: Optional[str] = None
     schema: Optional[str] = None
 
-@dataclass_json
-@dataclass
+@json_response
 class Property:
     id: Optional[str] = field(metadata=config(field_name="@id"))
     type: str=field(metadata=config(field_name="@type"))
@@ -52,19 +49,17 @@ class Property:
     schema: Optional[str] = None
     color: Optional[str] = None
 
-@dataclass_json
-@dataclass
+@json_response
 class Telemetry:
     id: Optional[str] = field(metadata=config(field_name="@id"))
-    type: list[str]=field(metadata=config(field_name="@type"))
+    type: list[str] = field(metadata=config(field_name="@type"))
     name:str
 
     comment: Optional[str] = None
     description: Optional[str] = None
     displayName: Optional[str] = None
 
-@dataclass_json
-@dataclass
+@json_response
 class CapabilityModel:
     type: str = field(metadata=config(field_name="@type"))
     id: str = field(metadata=config(field_name="@id"))
@@ -93,8 +88,7 @@ class CapabilityModel:
         self.contents = tmp
 
 
-@dataclass_json
-@dataclass
+@json_response
 class DeviceTemplate:
     etag: str
     displayName: str
@@ -103,8 +97,7 @@ class DeviceTemplate:
     type: list[str] = field(metadata=config(field_name="@type"))
     context: list[str] = field(metadata=config(field_name="@context"))
 
-@dataclass_json
-@dataclass
+@json_response
 class IOTCentralApiErrorDetail:
     code: str
     message: str
