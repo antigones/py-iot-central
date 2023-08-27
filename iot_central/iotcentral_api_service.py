@@ -1,8 +1,8 @@
 import datetime
 import requests
-from iot_central.auth_type import AuthType
 
-from iot_central.iotc_objects import Device, DeviceTemplate
+
+from iot_central.iotc_objects import AuthType, Device, DeviceTemplate
 from iot_central.responses import GetTelemetryResponse, IOTCentralApiErrorResponse, ListDevicesResponse, SendCommandResponse
 
 

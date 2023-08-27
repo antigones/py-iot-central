@@ -1,7 +1,13 @@
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Optional
 from dataclasses_json import config, dataclass_json
 
+
+
+class AuthType(Enum):
+    BEARER = 'Bearer'
+    SAS_TOKEN = 'SharedAccessSignature'
 
 @dataclass_json
 @dataclass

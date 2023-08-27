@@ -1,9 +1,12 @@
-from iot_central.iot_central_error import IOTCentralError
 from iot_central.iotc_objects import Command, Telemetry, CloudProperty, Property
 from iot_central.responses import IOTCentralApiErrorResponse
 
 from iot_central.iotcentral_api_service import IOTCentralAPIService
 
+
+
+class IOTCentralError(BaseException):
+    pass
 
 class CompleteDevice:
 
@@ -69,4 +72,5 @@ class IOTCentral:
 
     def _filter_objects_by_type(self, typeName: type, iot_objs_list: list) -> list[type]:
         return [x for x in iot_objs_list if isinstance(x, typeName)]
+
 
