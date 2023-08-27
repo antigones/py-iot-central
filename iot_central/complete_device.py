@@ -6,7 +6,7 @@ from iot_central.classes.iot_central.telemetry import Telemetry
 from iot_central.classes.iot_central.command import Command
 
 
-class Device:
+class CompleteDevice:
 
     def __init__(self, name:str, display_name:str, commands:list[Command], telemetries:list[Telemetry], properties: list[Property], cloud_properties:list[CloudProperty]):
         self.name = name

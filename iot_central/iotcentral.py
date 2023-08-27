@@ -1,6 +1,6 @@
 from iot_central.classes.iot_central.iot_central_error import IOTCentralError
 from iot_central.classes.iot_central.iotcentral_api_error_response import IOTCentralApiErrorResponse
-from iot_central.device import Device
+from iot_central.complete_device import CompleteDevice
 
 from iot_central.classes.iot_central.cloud_property import CloudProperty
 from iot_central.classes.iot_central.command import Command
@@ -21,7 +21,7 @@ class IOTCentral:
             token=self.token,
             api_version=self.api_version)
     
-    def get_devices(self) -> list[Device]:
+    def get_devices(self) -> list[CompleteDevice]:
         complete_devices = list()
         devices = self.IOTCentralAPIService.get_devices()
         if isinstance(devices, IOTCentralApiErrorResponse):
@@ -30,7 +30,7 @@ class IOTCentral:
             device_template = self.IOTCentralAPIService.get_template(device.template)
             if isinstance(device_template, IOTCentralApiErrorResponse):
                 raise IOTCentralError()
-            complete_device = Device(
+            complete_device = CompleteDevice(
                 name=device.id, 
                 display_name=device.displayName,
                 commands=self._filter_objects_by_type(Command, device_template.capabilityModel.contents),
