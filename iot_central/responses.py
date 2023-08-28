@@ -13,7 +13,7 @@ class UpdatePropertyResponse:
 @dataclass
 class SendCommandResponseValue:
     responseCode: int
-    response: str
+    response: Optional[str] = None
     request: Optional[str] = None
     connectionTimeout: Optional[int] = None
     id: Optional[str] = None
