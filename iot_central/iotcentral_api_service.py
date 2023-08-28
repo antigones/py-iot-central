@@ -57,7 +57,7 @@ class IOTCentralAPIService:
     def send_command(self, device, command, payload={}) -> SendCommandResponse | IOTCentralApiErrorResponse :
 
         url = f"https://{self.app_subdomain}/api/devices/{device}/commands/{command}?api-version={self.api_version}"
-        response = requests.post(url, headers=self.headers, json=payload, verify=False)
+        response = requests.post(url, headers=self.headers, json=payload)
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
             res = SendCommandResponse.from_json(response.text)
