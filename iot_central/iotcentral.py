@@ -1,9 +1,7 @@
+from collections import defaultdict 
 from iot_central.iotc_objects import Command, Telemetry, CloudProperty, Property
 from iot_central.responses import IOTCentralApiErrorResponse
-
-from iot_central.iotcentral_api_service import IOTCentralAPIService
-
-
+from iot_central.iotcentral_api import IOTCentralAPI
 
 class IOTCentralError(BaseException):
     pass
@@ -20,7 +18,7 @@ class CompleteDevice:
     
     def __str__(self) -> str:
         return self.name
-    
+
     def __repr__(self) -> str:
         return self.name
 
@@ -32,45 +30,57 @@ class IOTCentral:
         self.auth_type = auth_type
         self.token = token
         self.api_version = api_version
-        self.IOTCentralAPIService = IOTCentralAPIService(
+        self.IOTCentralAPI = IOTCentralAPI(
             app_subdomain=self.app_subdomain, 
             auth_type=self.auth_type,
             token=self.token,
             api_version=self.api_version)
     
+
+
     def get_devices(self) -> list[CompleteDevice]:
         complete_devices = list()
-        devices = self.IOTCentralAPIService.get_devices()
+        devices = self.IOTCentralAPI.get_devices()
+
         if isinstance(devices, IOTCentralApiErrorResponse):
             raise IOTCentralError()
+
         for device in devices.value:
-            device_template = self.IOTCentralAPIService.get_template(device.template)
+            device_template = self.IOTCentralAPI.get_template(device.template)
             if isinstance(device_template, IOTCentralApiErrorResponse):
                 raise IOTCentralError()
+            device_capabilities = self._device_objects_by_type(device_template.capabilityModel.contents)
             complete_device = CompleteDevice(
                 name=device.id, 
                 display_name=device.displayName,
-                commands=self._filter_objects_by_type(Command, device_template.capabilityModel.contents),
-                telemetries=self._filter_objects_by_type(Telemetry, device_template.capabilityModel.contents),
-                cloud_properties=self._filter_objects_by_type(CloudProperty, device_template.capabilityModel.contents),
-                properties=self._filter_objects_by_type(Property, device_template.capabilityModel.contents))
+                commands=device_capabilities['Command'],
+                telemetries=device_capabilities['Telemetry'],
+                cloud_properties=device_capabilities['CloudProperties'],
+                properties=device_capabilities['Properties'])
             complete_devices.append(complete_device)
         return complete_devices
 
-    
-
     def send_command(self, device, command):
-        return self.IOTCentralAPIService.send_command(device=device, command=command)
+        return self.IOTCentralAPI.send_command(device=device, command=command)
     
-
     def update_property(self, device_name, payload:str):
-        return self.IOTCentralAPIService.update_property(device=device_name, payload=payload)
-    
+        return self.IOTCentralAPI.update_property(device=device_name, payload=payload)
+
     def get_telemetry(self, device_name, property):
-        return self.IOTCentralAPIService.get_telemetry(device=device_name, property=property)
+        return self.IOTCentralAPI.get_telemetry(device=device_name, property=property)
+
+    def _device_objects_by_type(self, iot_objs_list: list) -> list[type]:
+        types = {Command:'Command', Telemetry:'Telemetry', CloudProperty:'CloudProperty', Property:'Property'}
+        
+        capabilities_dict = defaultdict(lambda: list())
+        for x in iot_objs_list:
+            for t in types.keys():
+                if isinstance(x, t):
+                    k = types[t]
+                    capabilities_dict[k].append(x)
+        # return [x for x in iot_objs_list if isinstance(x, typeName)]
+        return capabilities_dict
 
 
-    def _filter_objects_by_type(self, typeName: type, iot_objs_list: list) -> list[type]:
-        return [x for x in iot_objs_list if isinstance(x, typeName)]
 
 
